@@ -77,3 +77,49 @@ void encryptText(const std::string& inputFile, const std::string& outputFile) {
     fin.close();
     fout.close();
 }
+
+void decryptText(const std::string& inputFile, const std::string& outputFile) {
+    std::ifstream fin(inputFile, std::ios::binary);
+    std::ofstream fout(outputFile);
+
+    if (!fin.is_open() || !fout.is_open()) {
+        std::cout << "Failed to open files!" << std::endl;
+        return;
+    }
+
+    int lineNumber = 0;
+    while (!fin.eof()) {
+        int byte1;
+        int byte2;
+
+        // Read two bytes from the input file
+        fin.read(reinterpret_cast<char*>(&byte1), sizeof(byte1));
+        fin.read(reinterpret_cast<char*>(&byte2), sizeof(byte2));
+
+        if (fin.eof()) {
+            break;
+        }
+
+        // Extract data from the two bytes
+        int lineNumber = byte1 >> 6;
+        int position = (byte1 >> 1) & 0x1F;
+        int ascii = ((byte1 & 0x01) << 7) | (byte2 >> 1);
+        int parity = byte2 & 0x01;
+
+        // Verify parity bit
+        int computedParity = 0;
+        for (int i = 0; i < 8; i++) {
+            computedParity ^= (ascii >> i) & 1;
+        }
+
+        // If parity bit is correct, write the character to the output file
+        if (parity == computedParity) {
+            fout << static_cast<char>(ascii);
+        } else {
+            std::cout << "Parity bit verification failed. Skipping character." << std::endl;
+        }
+    }
+
+    fin.close();
+    fout.close();
+}
