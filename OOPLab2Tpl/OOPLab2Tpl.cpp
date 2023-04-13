@@ -156,3 +156,68 @@ void encodeBytes(const std::string& inputFile, const std::string& outputFile) {
     fin.close();
     fout.close();
 }
+
+int main() {
+    int choice;
+    do {
+        std::cout << "Select an option:" << std::endl;
+        std::cout << "1. Calculate Expression" << std::endl;
+        std::cout << "2. Encrypt Text" << std::endl;
+        std::cout << "3. Decrypt Text" << std::endl;
+        std::cout << "4. Encode Bytes" << std::endl;
+        std::cout << "5. Exit" << std::endl;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                int a, b, c, d;
+                std::cout << "Enter four integer values separated by spaces: ";
+                std::cin >> a >> b >> c >> d;
+                int result = calculateExpression(a, b, c, d);
+                std::cout << "Result: " << result << std::endl;
+                break;
+            }
+            case 2: {
+                std::string inputFile, outputFile;
+                std::cout << "Enter input file name: ";
+                std::cin >> inputFile;
+                std::cout << "Enter output file name: ";
+                std::cin >> outputFile;
+                encryptText(inputFile, outputFile);
+                std::cout << "Encryption completed successfully." << std::endl;
+                break;
+            }
+            case 3: {
+                std::string inputFile, outputFile;
+                std::cout << "Enter input file name: ";
+                std::cin >> inputFile;
+                std::cout << "Enter output file name: ";
+                std::cin >> outputFile;
+                decryptText(inputFile, outputFile);
+                std::cout << "Decryption completed successfully." << std::endl;
+                break;
+            }
+            case 4: {
+                std::string inputFile, outputFile;
+                std::cout << "Enter input file name: ";
+                std::cin >> inputFile;
+                std::cout << "Enter output file name: ";
+                std::cin >> outputFile;
+                encodeBytes(inputFile, outputFile);
+                std::cout << "Encoding completed successfully." << std::endl;
+                break;
+            }
+            case 5: {
+                std::cout << "Exiting..." << std::endl;
+                break;
+            }
+            default: {
+                std::cout << "Invalid choice. Please try again." << std::endl;
+                break;
+            }
+        }
+    } while (choice != 5);
+
+    return 0;
+}
