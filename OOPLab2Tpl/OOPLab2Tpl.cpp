@@ -123,3 +123,36 @@ void decryptText(const std::string& inputFile, const std::string& outputFile) {
     fin.close();
     fout.close();
 }
+
+void encodeBytes(const std::string& inputFile, const std::string& outputFile) {
+    std::ifstream fin(inputFile, std::ios::binary);
+    std::ofstream fout(outputFile, std::ios::binary);
+
+    if (!fin.is_open() || !fout.is_open()) {
+        std::cout << "Failed to open files!" << std::endl;
+        return;
+    }
+
+    // Read bytes from input file into a vector
+    std::vector<char> bytes;
+    char byte;
+    while (fin.get(byte)) {
+        bytes.push_back(byte);
+    }
+
+    // Encode bytes
+    for (int i = 0; i < bytes.size(); i++) {
+        char encodedByte = 0;
+        for (int j = 0; j < 8; j++) {
+            // Get the j-th bit of the i-th byte
+            char bit = (bytes[i] >> j) & 0x01;
+
+            // Set the (j*8+i)-th bit of the encoded byte
+            encodedByte |= (bit << (j * 8 + i));
+        }
+        fout.write(&encodedByte, sizeof(encodedByte));
+    }
+
+    fin.close();
+    fout.close();
+}
